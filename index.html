@@ -23,14 +23,17 @@
 
     body {
       overflow: hidden;
+      min-height: 100vh;
+      min-height: 100lvh;
     }
 
     iframe {
-      position: absolute;
-      inset: 0;
+      /* Keep the frame in normal flow so Safari can paint it beneath Liquid Glass. */
       display: block;
       height: 100vh;
       height: 100lvh;
+      min-height: 100vh;
+      min-height: 100lvh;
     }
   </style>
 </head>
