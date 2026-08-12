@@ -33,6 +33,12 @@
       body * {
         cursor: url('https://threehands-website.tail220731.ts.net/assets/windows-3.1-cursor.svg') 0 0, auto;
       }
+
+      /* Force Chromium to re-read the cursor when the pointer re-enters the window. */
+      body.force-cursor-refresh,
+      body.force-cursor-refresh * {
+        cursor: url('https://threehands-website.tail220731.ts.net/assets/windows-3.1-cursor.svg') 0 0, auto !important;
+      }
     }
 
     iframe {
@@ -55,5 +61,26 @@
   <noscript>
     <a href="https://threehands-website.tail220731.ts.net/">Open the Three Hands website</a>
   </noscript>
+  <script>
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      let cursorRefreshScheduled = false;
+
+      function forceCursorRefresh() {
+        if (cursorRefreshScheduled) return;
+        cursorRefreshScheduled = true;
+        document.body.classList.add('force-cursor-refresh');
+        window.requestAnimationFrame(function() {
+          document.body.classList.remove('force-cursor-refresh');
+          cursorRefreshScheduled = false;
+        });
+      }
+
+      window.addEventListener('mouseenter', forceCursorRefresh);
+      window.addEventListener('focus', forceCursorRefresh);
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) forceCursorRefresh();
+      });
+    }
+  </script>
 </body>
 </html>
