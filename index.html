@@ -43,6 +43,15 @@
       }
     }
 
+    /* Use the blocky RGB cursor from the Website origin. */
+    :root {
+      --windows-cursor: url('https://threehands-website.tail220731.ts.net/assets/windows-3.1-cursor-rgb-a.svg') 0 0, auto;
+    }
+
+    :root.cursor-variant-b {
+      --windows-cursor: url('https://threehands-website.tail220731.ts.net/assets/windows-3.1-cursor-rgb-b.svg') 0 0, auto;
+    }
+
     iframe {
       /* Keep the frame in normal flow so Safari can paint it beneath Liquid Glass. */
       display: block;
