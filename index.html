@@ -27,17 +27,19 @@
       min-height: 100lvh;
     }
 
+    :root {
+      --windows-cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAACdSURBVFjD7ZZBDsAgCARZ0v9/mV5KY9QWm8jag3syaGREBSAiJpfM7iFN6o7NTACsASgjwIbQ2sCG0J6RCaFPEywIfZtkQGi0IBsiBMiGGALIhBgGcM2GONgOPwOI5NaI5grqE1N/gTtipmJIpxwDaMLes02NQLk5tRZ4LxCJngd+UYwYes0DdRQyHmGYiLIb1eVXsAE2wAbYAMsBTlw5TTnmUsVfAAAAEHRFWHRjb21tZW50AGN1cnNvci1hZo5mYAAAAFF0RVh0c3ZnOmNvbW1lbnQAIENvbXBhY3QgV2luZG93cyAxLnjigJMzLjEgYXJyb3cgYml0bWFwOiAzMsOXMzMiBjYW52YXMsIGhvdHNwb3QgMCwwLiCYFdX5AAAAAElFTkSuQmCC") 0 0, auto;
+    }
+
+    :root.cursor-variant-b {
+      --windows-cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAACdSURBVFjD7ZZBDsAgCARZ0v9/mV5KY9QWm8jag3syaGREBSAiJpfM7iFN6o7NTACsASgjwIbQ2sCG0J6RCaFPEywIfZtkQGi0IBsiBMiGGALIhBgGcM2GONgOPwOI5NaI5grqE1N/gTtipmJIpxwDaMLes02NQLk5tRZ4LxCJngd+UYwYes0DdRQyHmGYiLIb1eVXsAE2wAbYAMsBTlw5TTnmUsVfAAAAEHRFWHRjb21tAGN1cnNvci1i/4c32gAAAFF0RVh0c3ZnOmNvbW1lbnQAIENvbXBhY3QgV2luZG93cyAxLnjigJMzLjEgYXJyb3cgYml0bWFwOiAzMsOXMzMiBjYW52YXMsIGhvdHNwb3QgMCwwLiCYFdX5AAAAAElFTkSuQmCC") 0 0, auto;
+    }
+
     @media (hover: hover) and (pointer: fine) {
       html,
       body,
       body * {
-        cursor: url('https://threehands-website.tail220731.ts.net/assets/windows-3.1-cursor.svg') 0 0, auto;
-      }
-
-      /* Force Chromium to re-read the cursor when the pointer re-enters the window. */
-      body.force-cursor-refresh,
-      body.force-cursor-refresh * {
-        cursor: url('https://threehands-website.tail220731.ts.net/assets/windows-3.1-cursor.svg') 0 0, auto !important;
+        cursor: var(--windows-cursor) !important;
       }
     }
 
@@ -63,23 +65,43 @@
   </noscript>
   <script>
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      let cursorRefreshScheduled = false;
+      (function() {
+        const root = document.documentElement;
+        let variantB = false;
+        let refreshQueued = false;
+        let refreshNeeded = true;
 
-      function forceCursorRefresh() {
-        if (cursorRefreshScheduled) return;
-        cursorRefreshScheduled = true;
-        document.body.classList.add('force-cursor-refresh');
-        window.requestAnimationFrame(function() {
-          document.body.classList.remove('force-cursor-refresh');
-          cursorRefreshScheduled = false;
+        function refreshCursor() {
+          if (refreshQueued) return;
+          refreshQueued = true;
+          window.requestAnimationFrame(function() {
+            variantB = !variantB;
+            root.classList.toggle('cursor-variant-b', variantB);
+            refreshNeeded = false;
+            refreshQueued = false;
+          });
+        }
+
+        function markCursorStale() {
+          refreshNeeded = true;
+        }
+
+        document.documentElement.addEventListener('mouseenter', refreshCursor);
+        document.documentElement.addEventListener('mouseleave', markCursorStale);
+        document.addEventListener('mousemove', function() {
+          if (refreshNeeded) refreshCursor();
+        }, { passive: true });
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            markCursorStale();
+          } else {
+            refreshCursor();
+          }
         });
-      }
-
-      window.addEventListener('mouseenter', forceCursorRefresh);
-      window.addEventListener('focus', forceCursorRefresh);
-      document.addEventListener('visibilitychange', function() {
-        if (!document.hidden) forceCursorRefresh();
-      });
+        window.addEventListener('focus', refreshCursor);
+        window.addEventListener('pageshow', refreshCursor);
+        refreshCursor();
+      })();
     }
   </script>
 </body>
