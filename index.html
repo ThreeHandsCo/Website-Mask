@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Three Hands — independent game studio">
+  <meta name="description" content="Three Hands — handmade strange games.">
   <meta property="og:title" content="Three Hands">
-  <meta property="og:description" content="Independent game studio">
+  <meta property="og:description" content="Handmade strange games.">
   <meta property="og:url" content="https://threehands.dev/">
   <title>Three Hands</title>
   <link rel="canonical" href="https://threehands.dev/">
@@ -35,12 +35,10 @@
       --windows-cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAACQSURBVFjD7ZZBCoAwDAQ3i///crxUqbG2HtpEJAMF2wg7rggCgJYVAgFAVRElweMiSoL1JkKC9sBbgq1DTwk+Dbwk2Bt6SHB0w2qJocBqia03FJGbCwDBRG4NNELFrKlcBBrhyzkFSrjUIm5fQR2OBTW/acCGilcL9H5iyyhcSwP2NU1t4POE/rIlSZIk/2cHS9I1Fe321T4AAAARdEVYdGNvbW1lbnQAYmxvY2t5LWIzWPrScQAAAABJRU5ErkJggg==") 0 0, auto;
     }
 
-    @media (hover: hover) and (pointer: fine) {
-      html,
-      body,
-      body * {
-        cursor: var(--windows-cursor) !important;
-      }
+    html,
+    body,
+    body * {
+      cursor: var(--windows-cursor) !important;
     }
 
     /* Use the blocky RGB cursor from the Website origin. */
@@ -73,33 +71,31 @@
     <a href="https://threehands-website.tail220731.ts.net/">Open the Three Hands website</a>
   </noscript>
   <script>
-    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      (function() {
-        const root = document.documentElement;
-        let variantB = false;
-        let lastRefresh = 0;
+    (function() {
+      const root = document.documentElement;
+      let variantB = false;
+      let lastRefresh = 0;
 
-        function refreshCursor() {
-          const now = Date.now();
-          if (now - lastRefresh < 80) return;
-          lastRefresh = now;
-          variantB = !variantB;
-          root.classList.toggle('cursor-variant-b', variantB);
-        }
+      function refreshCursor() {
+        const now = Date.now();
+        if (now - lastRefresh < 80) return;
+        lastRefresh = now;
+        variantB = !variantB;
+        root.classList.toggle('cursor-variant-b', variantB);
+      }
 
-        document.documentElement.addEventListener('mouseenter', refreshCursor);
-        document.addEventListener('mousemove', refreshCursor, { passive: true });
-        document.addEventListener('visibilitychange', function() {
-          if (!document.hidden) refreshCursor();
-        });
-        window.addEventListener('focus', refreshCursor);
-        window.addEventListener('pageshow', refreshCursor);
-        window.addEventListener('blur', function() {
-          lastRefresh = 0;
-        });
-        refreshCursor();
-      })();
-    }
+      document.documentElement.addEventListener('mouseenter', refreshCursor);
+      document.addEventListener('mousemove', refreshCursor, { passive: true });
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) refreshCursor();
+      });
+      window.addEventListener('focus', refreshCursor);
+      window.addEventListener('pageshow', refreshCursor);
+      window.addEventListener('blur', function() {
+        lastRefresh = 0;
+      });
+      refreshCursor();
+    })();
   </script>
 </body>
 </html>
