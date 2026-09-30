@@ -85,6 +85,32 @@
     <a href="https://threehands-website.tail220731.ts.net/">Open the Three Hands website</a>
   </noscript>
   <script>
+    // Redundant origins: primary is the home server via Tailscale Funnel;
+    // fallback is the GitHub Pages copy deployed from the same commit.
+    const PRIMARY_ORIGIN = 'https://threehands-website.tail220731.ts.net/';
+    const FALLBACK_ORIGIN = 'https://threehandsco.github.io/Website/';
+    const FAILOVER_TIMEOUT_MS = 6000;
+
+    const iframe = document.querySelector('iframe');
+
+    // ?origin=pages forces the fallback (for testing).
+    if (new URLSearchParams(location.search).get('origin') === 'pages') {
+      iframe.src = FALLBACK_ORIGIN;
+    } else {
+      iframe.src = PRIMARY_ORIGIN;
+
+      // The funnel drops dead connections without a load event, so silence
+      // after the timeout means the primary is down: swap to the fallback.
+      let alive = false;
+      const failover = setTimeout(function() {
+        if (!alive) iframe.src = FALLBACK_ORIGIN + '?failover=1';
+      }, FAILOVER_TIMEOUT_MS);
+      iframe.addEventListener('load', function() {
+        alive = true;
+        clearTimeout(failover);
+      });
+    }
+
     (function() {
       const root = document.documentElement;
       let variantB = false;
